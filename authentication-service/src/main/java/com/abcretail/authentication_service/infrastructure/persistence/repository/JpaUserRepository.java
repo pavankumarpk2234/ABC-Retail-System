@@ -26,6 +26,16 @@ public interface JpaUserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByUsername(String username);
 
     /**
+     * Find a user by password reset token.
+     *
+     * Used during Reset Password.
+     *
+     * @param passwordResetToken Password reset token
+     * @return Optional UserEntity
+     */
+    Optional<UserEntity> findByPasswordResetToken(String passwordResetToken);
+
+    /**
      * Check whether a user exists with the given email.
      *
      * @param email User email

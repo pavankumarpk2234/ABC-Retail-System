@@ -14,6 +14,10 @@ public class User {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    // Forgot Password
+    private String passwordResetToken;
+    private LocalDateTime passwordResetTokenExpiry;
+
     public User() {
     }
 
@@ -24,7 +28,9 @@ public class User {
                 Role role,
                 UserStatus status,
                 LocalDateTime createdAt,
-                LocalDateTime updatedAt) {
+                LocalDateTime updatedAt,
+                String passwordResetToken,
+                LocalDateTime passwordResetTokenExpiry) {
 
         this.id = id;
         this.username = username;
@@ -34,6 +40,8 @@ public class User {
         this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.passwordResetToken = passwordResetToken;
+        this.passwordResetTokenExpiry = passwordResetTokenExpiry;
     }
 
     // ===========================
@@ -72,6 +80,32 @@ public class User {
         this.status = newStatus;
     }
 
+    /**
+     * Store password reset token and its expiry.
+     */
+    public void generatePasswordResetToken(String token,
+                                           LocalDateTime expiry) {
+        this.passwordResetToken = token;
+        this.passwordResetTokenExpiry = expiry;
+    }
+
+    /**
+     * Remove password reset token after successful password reset.
+     */
+    public void clearPasswordResetToken() {
+        this.passwordResetToken = null;
+        this.passwordResetTokenExpiry = null;
+    }
+
+    /**
+     * Check whether the reset token has expired.
+     */
+    public boolean isPasswordResetTokenExpired() {
+
+        return passwordResetTokenExpiry == null
+                || passwordResetTokenExpiry.isBefore(LocalDateTime.now());
+    }
+
     // ===========================
     // Getters & Setters
     // ===========================
@@ -92,10 +126,16 @@ public class User {
         this.username = username;
     }
 
+    /**
+     * Returns the user's email.
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Sets the user's email.
+     */
     public void setEmail(String email) {
         this.email = email;
     }
@@ -144,6 +184,23 @@ public class User {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getPasswordResetToken() {
+        return passwordResetToken;
+    }
+
+    public void setPasswordResetToken(String passwordResetToken) {
+        this.passwordResetToken = passwordResetToken;
+    }
+
+    public LocalDateTime getPasswordResetTokenExpiry() {
+        return passwordResetTokenExpiry;
+    }
+
+    public void setPasswordResetTokenExpiry(
+            LocalDateTime passwordResetTokenExpiry) {
+        this.passwordResetTokenExpiry = passwordResetTokenExpiry;
     }
 
     // ===========================

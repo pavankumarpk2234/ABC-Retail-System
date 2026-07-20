@@ -2,17 +2,7 @@ package com.abcretail.authentication_service.infrastructure.persistence.entity;
 
 import com.abcretail.authentication_service.domain.model.Role;
 import com.abcretail.authentication_service.domain.model.UserStatus;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -54,6 +44,16 @@ public class UserEntity {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    // ==========================================
+    // Forgot Password
+    // ==========================================
+
+    @Column(name = "password_reset_token", unique = true)
+    private String passwordResetToken;
+
+    @Column(name = "password_reset_token_expiry")
+    private LocalDateTime passwordResetTokenExpiry;
+
     public UserEntity() {
     }
 
@@ -64,7 +64,10 @@ public class UserEntity {
                       Role role,
                       UserStatus status,
                       LocalDateTime createdAt,
-                      LocalDateTime updatedAt) {
+                      LocalDateTime updatedAt,
+                      String passwordResetToken,
+                      LocalDateTime passwordResetTokenExpiry) {
+
         this.id = id;
         this.username = username;
         this.email = email;
@@ -73,6 +76,8 @@ public class UserEntity {
         this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.passwordResetToken = passwordResetToken;
+        this.passwordResetTokenExpiry = passwordResetTokenExpiry;
     }
 
     @PrePersist
@@ -85,6 +90,10 @@ public class UserEntity {
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
+    // ==========================
+    // Getters & Setters
+    // ==========================
 
     public Long getId() {
         return id;
@@ -148,6 +157,26 @@ public class UserEntity {
         return updatedAt;
     }
 
+    public String getPasswordResetToken() {
+        return passwordResetToken;
+    }
+
+    public void setPasswordResetToken(String passwordResetToken) {
+        this.passwordResetToken = passwordResetToken;
+    }
+
+    public LocalDateTime getPasswordResetTokenExpiry() {
+        return passwordResetTokenExpiry;
+    }
+
+    public void setPasswordResetTokenExpiry(LocalDateTime passwordResetTokenExpiry) {
+        this.passwordResetTokenExpiry = passwordResetTokenExpiry;
+    }
+
+    // ==========================
+    // equals & hashCode
+    // ==========================
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -159,6 +188,10 @@ public class UserEntity {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    // ==========================
+    // toString
+    // ==========================
 
     @Override
     public String toString() {

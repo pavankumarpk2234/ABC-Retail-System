@@ -8,7 +8,9 @@ public interface UserRepository {
 
     /**
      * Save a new user or update an existing user.
-     * Used to Register User
+     * Used to Register User, Change Password,
+     * Forgot Password, Reset Password.
+     *
      * @param user Domain user object
      * @return Saved user
      */
@@ -17,6 +19,7 @@ public interface UserRepository {
     /**
      * Find a user by ID.
      * Used to Get Profile
+     *
      * @param id User ID
      * @return Optional user
      */
@@ -24,7 +27,8 @@ public interface UserRepository {
 
     /**
      * Find a user by email.
-     * Used to Login User
+     * Used to Login User and Forgot Password.
+     *
      * @param email User email
      * @return Optional user
      */
@@ -32,15 +36,26 @@ public interface UserRepository {
 
     /**
      * Find a user by username.
-     * Used to Login User
+     * Used to Login User.
+     *
      * @param username Username
      * @return Optional user
      */
     Optional<User> findByUsername(String username);
 
     /**
+     * Find a user by password reset token.
+     * Used to Reset Password.
+     *
+     * @param token Password reset token
+     * @return Optional user
+     */
+    Optional<User> findByPasswordResetToken(String token);
+
+    /**
      * Check whether a user already exists with the given email.
-     * Used by Register User
+     * Used by Register User.
+     *
      * @param email User email
      * @return true if exists
      */
@@ -48,7 +63,8 @@ public interface UserRepository {
 
     /**
      * Check whether a user already exists with the given username.
-     * Used to Register User
+     * Used by Register User.
+     *
      * @param username Username
      * @return true if exists
      */
@@ -57,7 +73,8 @@ public interface UserRepository {
     /**
      * Delete a user by ID.
      * (Can later be implemented as soft delete.)
-     * Used to Future Features
+     * Used for future features.
+     *
      * @param id User ID
      */
     void deleteById(Long id);

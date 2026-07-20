@@ -126,7 +126,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/v1/auth/register",
                                 "/api/v1/auth/login",
-                                "/api/v1/auth/refresh-token"
+                                "/api/v1/auth/refresh-token",
+                                "/api/v1/auth/forgot-password"
                         ).permitAll()
 
                         // All other APIs require authentication

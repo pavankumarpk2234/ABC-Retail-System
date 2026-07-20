@@ -1,12 +1,15 @@
 package com.abcretail.authentication_service.presentation.controller;
 
 import com.abcretail.authentication_service.application.dto.request.ChangePasswordRequest;
+import com.abcretail.authentication_service.application.dto.request.ForgotPasswordRequest;
 import com.abcretail.authentication_service.application.dto.request.LoginRequest;
 import com.abcretail.authentication_service.application.dto.request.RefreshTokenRequest;
 import com.abcretail.authentication_service.application.dto.request.RegisterRequest;
+import com.abcretail.authentication_service.application.dto.response.ForgotPasswordResponse;
 import com.abcretail.authentication_service.application.dto.response.LoginResponse;
 import com.abcretail.authentication_service.application.dto.response.RegisterResponse;
 import com.abcretail.authentication_service.application.dto.response.UserResponse;
+import com.abcretail.authentication_service.application.usecase.forgotpassword.ForgotPasswordUseCase;
 import com.abcretail.authentication_service.application.usecase.login.LoginUserUseCase;
 import com.abcretail.authentication_service.application.usecase.password.ChangePasswordUseCase;
 import com.abcretail.authentication_service.application.usecase.profile.GetUserProfileUseCase;
@@ -30,17 +33,22 @@ public class AuthenticationController {
     private final GetUserProfileUseCase getUserProfileUseCase;
     private final ChangePasswordUseCase changePasswordUseCase;
     private final RefreshTokenUseCase refreshTokenUseCase;
+    private final ForgotPasswordUseCase forgotPasswordUseCase;
 
-    public AuthenticationController(RegisterUserUseCase registerUserUseCase,
-                                    LoginUserUseCase loginUserUseCase,
-                                    GetUserProfileUseCase getUserProfileUseCase,
-                                    ChangePasswordUseCase changePasswordUseCase,
-                                    RefreshTokenUseCase refreshTokenUseCase) {
+    public AuthenticationController(
+            RegisterUserUseCase registerUserUseCase,
+            LoginUserUseCase loginUserUseCase,
+            GetUserProfileUseCase getUserProfileUseCase,
+            ChangePasswordUseCase changePasswordUseCase,
+            RefreshTokenUseCase refreshTokenUseCase,
+            ForgotPasswordUseCase forgotPasswordUseCase) {
+
         this.registerUserUseCase = registerUserUseCase;
         this.loginUserUseCase = loginUserUseCase;
         this.getUserProfileUseCase = getUserProfileUseCase;
         this.changePasswordUseCase = changePasswordUseCase;
         this.refreshTokenUseCase = refreshTokenUseCase;
+        this.forgotPasswordUseCase = forgotPasswordUseCase;
     }
 
     /**
@@ -89,6 +97,21 @@ public class AuthenticationController {
     }
 
     /**
+     * Forgot Password
+     *
+     * POST http://localhost:8081/api/v1/auth/forgot-password
+     */
+    @PostMapping("/forgot-password")
+    public ResponseEntity<ForgotPasswordResponse> forgotPassword(
+            @Valid @RequestBody ForgotPasswordRequest request) {
+
+        ForgotPasswordResponse response =
+                forgotPasswordUseCase.forgotPassword(request);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
      * Get currently authenticated user's profile.
      *
      * GET http://localhost:8081/api/v1/auth/me
@@ -132,14 +155,5 @@ public class AuthenticationController {
 
         return ResponseEntity.ok("Password changed successfully.");
     }
-
-    /**
-     * Protected endpoint for testing JWT authentication.
-     */
-//    @PreAuthorize("isAuthenticated()")
-//    @GetMapping("/test")
-//    public String test() {
-//        return "Authenticated";
-//    }
 
 }

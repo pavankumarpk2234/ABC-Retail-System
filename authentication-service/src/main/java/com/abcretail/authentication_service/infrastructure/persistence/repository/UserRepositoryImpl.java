@@ -61,6 +61,15 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     /**
+     * Find user by password reset token.
+     */
+    @Override
+    public Optional<User> findByPasswordResetToken(String token) {
+        return jpaUserRepository.findByPasswordResetToken(token)
+                .map(userEntityMapper::toDomain);
+    }
+
+    /**
      * Check whether email already exists.
      */
     @Override
