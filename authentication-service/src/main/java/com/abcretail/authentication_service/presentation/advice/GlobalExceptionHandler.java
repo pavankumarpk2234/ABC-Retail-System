@@ -7,6 +7,9 @@ import com.abcretail.authentication_service.domain.exception.UserAlreadyExistsEx
 import com.abcretail.authentication_service.domain.exception.UserNotFoundException;
 import com.abcretail.authentication_service.presentation.exception.ErrorResponse;
 import com.abcretail.authentication_service.presentation.exception.ValidationErrorResponse;
+import com.abcretail.authentication_service.domain.exception.InvalidPasswordResetTokenException;
+import com.abcretail.authentication_service.domain.exception.PasswordMismatchException;
+import com.abcretail.authentication_service.domain.exception.PasswordResetTokenExpiredException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -109,6 +112,57 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    /**
+     * Invalid password reset token.
+     */
+    @ExceptionHandler(InvalidPasswordResetTokenException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidPasswordResetTokenException(
+            InvalidPasswordResetTokenException ex) {
+
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.badRequest().body(response);
+    }
+
+    /**
+     * Password reset token expired.
+     */
+    @ExceptionHandler(PasswordResetTokenExpiredException.class)
+    public ResponseEntity<ErrorResponse> handlePasswordResetTokenExpiredException(
+            PasswordResetTokenExpiredException ex) {
+
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.badRequest().body(response);
+    }
+
+    /**
+     * Password and Confirm Password do not match.
+     */
+    @ExceptionHandler(PasswordMismatchException.class)
+    public ResponseEntity<ErrorResponse> handlePasswordMismatchException(
+            PasswordMismatchException ex) {
+
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

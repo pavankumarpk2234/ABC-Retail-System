@@ -5,9 +5,11 @@ import com.abcretail.authentication_service.application.dto.request.ForgotPasswo
 import com.abcretail.authentication_service.application.dto.request.LoginRequest;
 import com.abcretail.authentication_service.application.dto.request.RefreshTokenRequest;
 import com.abcretail.authentication_service.application.dto.request.RegisterRequest;
+import com.abcretail.authentication_service.application.dto.request.ResetPasswordRequest;
 import com.abcretail.authentication_service.application.dto.response.ForgotPasswordResponse;
 import com.abcretail.authentication_service.application.dto.response.LoginResponse;
 import com.abcretail.authentication_service.application.dto.response.RegisterResponse;
+import com.abcretail.authentication_service.application.dto.response.ResetPasswordResponse;
 import com.abcretail.authentication_service.application.dto.response.UserResponse;
 import com.abcretail.authentication_service.application.usecase.forgotpassword.ForgotPasswordUseCase;
 import com.abcretail.authentication_service.application.usecase.login.LoginUserUseCase;
@@ -15,6 +17,7 @@ import com.abcretail.authentication_service.application.usecase.password.ChangeP
 import com.abcretail.authentication_service.application.usecase.profile.GetUserProfileUseCase;
 import com.abcretail.authentication_service.application.usecase.refresh.RefreshTokenUseCase;
 import com.abcretail.authentication_service.application.usecase.register.RegisterUserUseCase;
+import com.abcretail.authentication_service.application.usecase.resetpassword.ResetPasswordUseCase;
 import com.abcretail.authentication_service.infrastructure.security.userdetails.CustomUserDetails;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -34,6 +37,7 @@ public class AuthenticationController {
     private final ChangePasswordUseCase changePasswordUseCase;
     private final RefreshTokenUseCase refreshTokenUseCase;
     private final ForgotPasswordUseCase forgotPasswordUseCase;
+    private final ResetPasswordUseCase resetPasswordUseCase;
 
     public AuthenticationController(
             RegisterUserUseCase registerUserUseCase,
@@ -41,7 +45,8 @@ public class AuthenticationController {
             GetUserProfileUseCase getUserProfileUseCase,
             ChangePasswordUseCase changePasswordUseCase,
             RefreshTokenUseCase refreshTokenUseCase,
-            ForgotPasswordUseCase forgotPasswordUseCase) {
+            ForgotPasswordUseCase forgotPasswordUseCase,
+            ResetPasswordUseCase resetPasswordUseCase) {
 
         this.registerUserUseCase = registerUserUseCase;
         this.loginUserUseCase = loginUserUseCase;
@@ -49,6 +54,7 @@ public class AuthenticationController {
         this.changePasswordUseCase = changePasswordUseCase;
         this.refreshTokenUseCase = refreshTokenUseCase;
         this.forgotPasswordUseCase = forgotPasswordUseCase;
+        this.resetPasswordUseCase = resetPasswordUseCase;
     }
 
     /**
@@ -107,6 +113,21 @@ public class AuthenticationController {
 
         ForgotPasswordResponse response =
                 forgotPasswordUseCase.forgotPassword(request);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Reset Password
+     *
+     * POST http://localhost:8081/api/v1/auth/reset-password
+     */
+    @PostMapping("/reset-password")
+    public ResponseEntity<ResetPasswordResponse> resetPassword(
+            @Valid @RequestBody ResetPasswordRequest request) {
+
+        ResetPasswordResponse response =
+                resetPasswordUseCase.resetPassword(request);
 
         return ResponseEntity.ok(response);
     }
